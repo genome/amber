@@ -1,0 +1,7 @@
+/*.egg-info
+/*.egg
+/.tox
+/AUTHORS
+/ChangeLog
+*.pyc
+/db.sqlite3

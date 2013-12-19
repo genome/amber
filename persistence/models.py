@@ -1,5 +1,7 @@
 from django.db import models
 
+import json_field
+
 
 class Library(models.Model):
     name = models.CharField(max_length=256)
@@ -32,3 +34,28 @@ class File(models.Model):
 class Allocation(models.Model):
     allocation_id = models.CharField(max_length=256, unique=True)
     fileset = models.ForeignKey(Fileset, related_name='allocations')
+
+
+class Process(models.Model):
+    allocation_id = models.CharField(max_length=256, unique=True)
+
+class Result(models.Model):
+    creating_process = models.ForeignKey(Process)
+
+    tool_name = models.CharField(max_length=256)
+    lookup_hash = models.CharField(max_length=32)
+    test_name = models.CharField(max_length=256)
+
+    inputs = json_field.JSONField()
+    outputs = json_field.JSONField()
+
+    class Meta(object):
+        unique_together = ('tool_name', 'lookup_hash', 'test_name')
+
+class ProcessStep(models.Model):
+    process = models.ForeignKey(Process)
+    result = models.ForeignKey(Result)
+    label = models.CharField(max_length=256)
+
+    class Meta(object):
+        unique_together = ('process', 'result')

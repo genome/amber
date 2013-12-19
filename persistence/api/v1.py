@@ -82,6 +82,34 @@ class FileResource(ModelResource):
         resource_name = 'files'
 
 
+class ProcessResource(ModelResource):
+    created_results = fields.ToManyField('persistence.api.v1.ResultResource',
+            'created_results')
+
+    steps = fields.ToManyField('persistence.api.v1.ProcessStepResource',
+            'steps')
+
+    class Meta(BaseMeta):
+        queryset = models.Process.objects.all()
+        resource_name = 'processes'
+
+class ResultResource(ModelResource):
+    creating_process = fields.ToOneField(ProcessResource, 'creating_process')
+
+    class Meta(BaseMeta):
+        queryset = models.Result.objects.all()
+        resource_name = 'results'
+        excludes = ['lookup_hash']
+
+class ProcessStepResource(ModelResource):
+    process = fields.ToOneField(ProcessResource, 'process')
+    result = fields.ToOneField(ResultResource, 'result')
+
+    class Meta(BaseMeta):
+        queryset = models.ProcessStep.objects.all()
+        resource_name = 'process-steps'
+
+
 amber_api = Api(api_name='v1')
 
 MODULE = sys.modules[__name__]

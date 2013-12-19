@@ -28,3 +28,7 @@ class File(models.Model):
 
     class Meta(object):
         unique_together = ('path', 'fileset')
+
+class Allocation(models.Model):
+    allocation_id = models.CharField(max_length=256, unique=True)
+    fileset = models.ForeignKey(Fileset, related_name='allocations')

@@ -1,6 +1,10 @@
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
+import hashlib
 import json_field
+import simplejson
 
 
 class Library(models.Model):
@@ -40,7 +44,8 @@ class Process(models.Model):
     allocation_id = models.CharField(max_length=256, unique=True)
 
 class Result(models.Model):
-    creating_process = models.ForeignKey(Process)
+    creating_process = models.ForeignKey(Process,
+            related_name='created_results')
 
     tool_name = models.CharField(max_length=256)
     lookup_hash = models.CharField(max_length=32)
@@ -52,9 +57,21 @@ class Result(models.Model):
     class Meta(object):
         unique_together = ('tool_name', 'lookup_hash', 'test_name')
 
+    @staticmethod
+    def calculate_lookup_hash(inputs):
+        m = hashlib.md5()
+        m.update(simplejson.dumps(inputs, sort_keys=True))
+        return m.hexdigest()
+
+
+@receiver(pre_save, sender=Result)
+def _update_lookup_hash(sender, instance, **kwargs):
+    instance.lookup_hash = Result.calculate_lookup_hash(instance.inputs)
+
+
 class ProcessStep(models.Model):
-    process = models.ForeignKey(Process)
-    result = models.ForeignKey(Result)
+    process = models.ForeignKey(Process, related_name='steps')
+    result = models.ForeignKey(Result, related_name='steps')
     label = models.CharField(max_length=256)
 
     class Meta(object):

@@ -7,6 +7,7 @@ from tastypie.resources import ModelResource, fields
 from persistence import models
 
 import inspect
+import simplejson
 import sys
 
 
@@ -66,7 +67,7 @@ class AllocationResource(ModelResource):
 
 class FilesetResource(ModelResource):
     files = fields.ToManyField('persistence.api.v1.FileResource', 'files',
-            null=True)
+            null=True, full=True)
     allocations = fields.ToManyField(AllocationResource, 'allocations',
             null=True)
 
@@ -84,10 +85,10 @@ class FileResource(ModelResource):
 
 class ProcessResource(ModelResource):
     created_results = fields.ToManyField('persistence.api.v1.ResultResource',
-            'created_results')
+            'created_results', null=True)
 
     steps = fields.ToManyField('persistence.api.v1.ProcessStepResource',
-            'steps')
+            'steps', null=True)
 
     class Meta(BaseMeta):
         queryset = models.Process.objects.all()
@@ -100,6 +101,10 @@ class ResultResource(ModelResource):
         queryset = models.Result.objects.all()
         resource_name = 'results'
         excludes = ['lookup_hash']
+
+    def dehydrate(self, bundle):
+        bundle.data['inputs'] = bundle.obj.inputs
+        return bundle
 
 class ProcessStepResource(ModelResource):
     process = fields.ToOneField(ProcessResource, 'process')

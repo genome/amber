@@ -58,6 +58,8 @@ class IndividualResource(ModelResource):
 
 
 class AllocationResource(ModelResource):
+    fileset = fields.ToOneField('persistence.api.v1.FilesetResource', 'fileset')
+
     class Meta(BaseMeta):
         queryset = models.Allocation.objects.all()
         resource_name = 'allocations'

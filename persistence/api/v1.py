@@ -24,21 +24,24 @@ class UserResource(ModelResource):
 
 class SampleResource(ModelResource):
     library = fields.ToOneField('persistence.api.v1.LibraryResource', 'library')
-    individuals = fields.ToManyField('persistence.api.v1.IndividualResource', 'individuals', null=True)
+    individuals = fields.ToManyField('persistence.api.v1.IndividualResource',
+            'individuals', null=True)
 
     class Meta(BaseMeta):
         queryset = models.Sample.objects.all()
         resource_name = 'samples'
 
 class LibraryResource(ModelResource):
-    samples = fields.ToManyField('persistence.api.v1.SampleResource', 'samples', null=True)
+    samples = fields.ToManyField('persistence.api.v1.SampleResource',
+            'samples', null=True)
 
     class Meta(BaseMeta):
         queryset = models.Library.objects.all()
         resource_name = 'libraries'
 
 class TaxonResource(ModelResource):
-    individuals = fields.ToManyField('persistence.api.v1.IndividualResource', 'individuals', null=True)
+    individuals = fields.ToManyField('persistence.api.v1.IndividualResource',
+            'individuals', null=True)
 
     class Meta(BaseMeta):
         queryset = models.Taxon.objects.all()
@@ -46,11 +49,28 @@ class TaxonResource(ModelResource):
 
 class IndividualResource(ModelResource):
     taxon = fields.ToOneField('persistence.api.v1.TaxonResource', 'taxon')
-    samples = fields.ToManyField('persistence.api.v1.SampleResource', 'samples', null=True)
+    samples = fields.ToManyField('persistence.api.v1.SampleResource',
+            'samples', null=True)
 
     class Meta(BaseMeta):
         queryset = models.Individual.objects.all()
         resource_name = 'individuals'
+
+
+class FilesetResource(ModelResource):
+    files = fields.ToManyField('persistence.api.v1.FileResource', 'files',
+            null=True)
+
+    class Meta(BaseMeta):
+        queryset = models.Fileset.objects.all()
+        resource_name = 'filesets'
+
+class FileResource(ModelResource):
+    fileset = fields.ToOneField('persistence.api.v1.FilesetResource', 'fileset')
+
+    class Meta(BaseMeta):
+        queryset = models.File.objects.all()
+        resource_name = 'files'
 
 
 amber_api = Api(api_name='v1')

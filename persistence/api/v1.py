@@ -67,9 +67,9 @@ class AllocationResource(ModelResource):
 
 class FilesetResource(ModelResource):
     files = fields.ToManyField('persistence.api.v1.FileResource', 'files',
-            null=True, full=True)
+            null=True, full=True, related_name='fileset')
     allocations = fields.ToManyField(AllocationResource, 'allocations',
-            null=True)
+            null=True, full=True, related_name='fileset')
 
     class Meta(BaseMeta):
         queryset = models.Fileset.objects.all()

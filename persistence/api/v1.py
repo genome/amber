@@ -104,6 +104,7 @@ class ResultResource(ModelResource):
 
     def dehydrate(self, bundle):
         bundle.data['inputs'] = bundle.obj.inputs
+        bundle.data['outputs'] = bundle.obj.outputs
         return bundle
 
 class ProcessStepResource(ModelResource):

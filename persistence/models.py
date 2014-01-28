@@ -42,6 +42,7 @@ class Allocation(models.Model):
 
 class Process(models.Model):
     allocation_id = models.CharField(max_length=256, unique=True)
+    workflow_name = models.CharField(max_length=256, unique=True)
 
 class Result(models.Model):
     creating_process = models.ForeignKey(Process,

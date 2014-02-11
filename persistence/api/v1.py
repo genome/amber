@@ -114,6 +114,7 @@ class ProcessStepResource(ModelResource):
     class Meta(BaseMeta):
         queryset = models.ProcessStep.objects.all()
         resource_name = 'process-steps'
+        filtering = {"process": ["exact"]}
 
 
 amber_api = Api(api_name='v1')

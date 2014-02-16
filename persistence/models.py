@@ -74,6 +74,3 @@ class ProcessStep(models.Model):
     process = models.ForeignKey(Process, related_name='steps')
     result = models.ForeignKey(Result, related_name='steps')
     label = models.CharField(max_length=256)
-
-    class Meta(object):
-        unique_together = ('process', 'result')

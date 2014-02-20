@@ -9,11 +9,6 @@ TEMPLATE_DEBUG = True
 SECRET_KEY = 'testing*secret*key'
 
 
-INSTALLED_APPS += [
-    'django.contrib.admin',
-]
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

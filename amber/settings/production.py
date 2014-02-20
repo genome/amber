@@ -4,6 +4,9 @@ import os
 
 DEBUG = False
 TEMPLATE_DEBUG = False
+ALLOWED_HOSTS = [
+        os.environ['AMBER_ALLOWED_HOST'],
+]
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['AMBER_SECRET_KEY']

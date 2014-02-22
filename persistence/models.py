@@ -37,7 +37,14 @@ class File(models.Model):
 
 class Process(models.Model):
     allocation_id = models.CharField(max_length=256, unique=True)
-    workflow_name = models.CharField(max_length=256, unique=True)
+    username = models.CharField(max_length=256)
+    date_started = models.DateTimeField(auto_now_add=True)
+    date_ended = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=64)
+    source_path = models.CharField(max_length=512)
+
+    # workflow_name is used to lookup the workflow in another database
+    workflow_name = models.CharField(max_length=512, unique=True)
 
 class Tool(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)

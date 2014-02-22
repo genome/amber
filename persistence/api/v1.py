@@ -66,12 +66,6 @@ class FileResource(ModelResource):
         resource_name = 'files'
 
 class ProcessResource(ModelResource):
-    created_results = fields.ToManyField('persistence.api.v1.ResultResource',
-            'created_results', null=True)
-
-    steps = fields.ToManyField('persistence.api.v1.ProcessStepResource',
-            'steps', null=True)
-
     class Meta(BaseMeta):
         queryset = models.Process.objects.all()
         resource_name = 'processes'

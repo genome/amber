@@ -94,8 +94,14 @@ class ProcessResource(ModelResource):
         queryset = models.Process.objects.all()
         resource_name = 'processes'
 
+class ToolResource(ModelResource):
+    class Meta(BaseMeta):
+        queryset = models.Tool.objects.all()
+        resource_name = 'tools'
+
 class ResultResource(ModelResource):
     creating_process = fields.ToOneField(ProcessResource, 'creating_process')
+    tool = fields.ToOneField(ToolResource, 'tool')
 
     class Meta(BaseMeta):
         queryset = models.Result.objects.all()

@@ -44,11 +44,18 @@ class Process(models.Model):
     allocation_id = models.CharField(max_length=256, unique=True)
     workflow_name = models.CharField(max_length=256, unique=True)
 
+class Tool(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
+    source_path = models.CharField(max_length=512)
+    version = models.CharField(max_length=32)
+    class Meta(object):
+        unique_together = ('source_path', 'version')
+
 class Result(models.Model):
     creating_process = models.ForeignKey(Process,
             related_name='created_results')
 
-    tool_name = models.CharField(max_length=256)
+    tool = models.ForeignKey(Tool, related_name='results')
     lookup_hash = models.CharField(max_length=32)
     test_name = models.CharField(max_length=256)
 
@@ -56,7 +63,7 @@ class Result(models.Model):
     outputs = json_field.JSONField()
 
     class Meta(object):
-        unique_together = ('tool_name', 'lookup_hash', 'test_name')
+        unique_together = ('tool', 'lookup_hash', 'test_name')
 
     @staticmethod
     def calculate_lookup_hash(inputs):

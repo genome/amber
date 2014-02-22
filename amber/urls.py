@@ -5,5 +5,6 @@ import persistence.views
 
 urlpatterns = patterns('',
     url(r'^v1/checkpoint/', persistence.views.checkpoint, name='checkpoint'),
+    url(r'^v1/register-tool/', persistence.views.register_tool, name='register tool'),
     url(r'^', include(amber_api_v1.urls)),
 )

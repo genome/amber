@@ -8,16 +8,20 @@ import simplejson
 
 
 class Library(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=256)
 
 class Sample(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=256)
     library = models.ForeignKey(Library, related_name='samples')
 
 class Taxon(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=256)
 
 class Individual(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=256)
     taxon = models.ForeignKey(Taxon, related_name='individuals')
     samples = models.ManyToManyField(Sample, related_name='individuals')
@@ -54,6 +58,7 @@ class Tool(models.Model):
         unique_together = ('source_path', 'version')
 
 class Result(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
     creating_process = models.ForeignKey(Process,
             related_name='created_results')
 
@@ -73,13 +78,12 @@ class Result(models.Model):
         m.update(simplejson.dumps(inputs, sort_keys=True))
         return m.hexdigest()
 
-
 @receiver(pre_save, sender=Result)
 def _update_lookup_hash(sender, instance, **kwargs):
     instance.lookup_hash = Result.calculate_lookup_hash(instance.inputs)
 
-
 class ProcessStep(models.Model):
+    date_created = models.DateTimeField(auto_now_add=True)
     process = models.ForeignKey(Process, related_name='steps')
     result = models.ForeignKey(Result, related_name='steps')
     label = models.CharField(max_length=256)

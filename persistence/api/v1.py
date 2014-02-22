@@ -1,7 +1,7 @@
 from tastypie.api import Api
 from tastypie.authentication import Authentication
 from tastypie.authorization import Authorization
-from tastypie.resources import ModelResource, fields
+from tastypie.resources import ModelResource, fields, ALL
 
 from persistence import models
 
@@ -68,6 +68,13 @@ class FileResource(ModelResource):
 class ProcessResource(ModelResource):
     class Meta(BaseMeta):
         queryset = models.Process.objects.all()
+        filtering = {
+                "run_by": ['exact'],
+                "status": ['exact'],
+                "date_started": ALL,
+                "date_completed": ALL,
+                "source_path": ['exact'],
+        }
         resource_name = 'processes'
 
 class ToolResource(ModelResource):
@@ -96,7 +103,9 @@ class ProcessStepResource(ModelResource):
     class Meta(BaseMeta):
         queryset = models.ProcessStep.objects.all()
         resource_name = 'process-steps'
-        filtering = {"process": ["exact"]}
+        filtering = {
+                "process": ["exact"],
+        }
 
 
 amber_api = Api(api_name='v1')

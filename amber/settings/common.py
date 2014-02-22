@@ -12,6 +12,8 @@ import os
 
 ALLOWED_HOSTS = []
 
+TASTYPIE_DATETIME_FORMATTING = 'rfc-2822'
+
 # Application definition
 DEFAULT_APPS = [
     'django.contrib.auth',

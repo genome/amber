@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from tastypie.api import Api
 from tastypie.authentication import Authentication
 from tastypie.authorization import Authorization
@@ -14,13 +13,6 @@ import sys
 class BaseMeta(object):
     authentication = Authentication()
     authorization = Authorization()
-
-
-class UserResource(ModelResource):
-    class Meta(BaseMeta):
-        queryset = User.objects.all()
-        resource_name = 'users'
-        excludes = ['email', 'password', 'is_superuser']
 
 
 class SampleResource(ModelResource):

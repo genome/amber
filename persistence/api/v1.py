@@ -50,17 +50,8 @@ class IndividualResource(ModelResource):
         resource_name = 'individuals'
 
 
-class AllocationResource(ModelResource):
-    fileset = fields.ToOneField('persistence.api.v1.FilesetResource', 'fileset')
-
-    class Meta(BaseMeta):
-        queryset = models.Allocation.objects.all()
-        resource_name = 'allocations'
-
 class FilesetResource(ModelResource):
     files = fields.ToManyField('persistence.api.v1.FileResource', 'files',
-            null=True, full=True, related_name='fileset')
-    allocations = fields.ToManyField(AllocationResource, 'allocations',
             null=True, full=True, related_name='fileset')
 
     class Meta(BaseMeta):
@@ -73,7 +64,6 @@ class FileResource(ModelResource):
     class Meta(BaseMeta):
         queryset = models.File.objects.all()
         resource_name = 'files'
-
 
 class ProcessResource(ModelResource):
     created_results = fields.ToManyField('persistence.api.v1.ResultResource',

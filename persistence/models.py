@@ -22,9 +22,9 @@ class Individual(models.Model):
     taxon = models.ForeignKey(Taxon, related_name='individuals')
     samples = models.ManyToManyField(Sample, related_name='individuals')
 
-
 class Fileset(models.Model):
-    pass
+    date_created = models.DateTimeField(auto_now_add=True)
+    allocation_id = models.CharField(max_length=256, unique=True)
 
 class File(models.Model):
     path = models.CharField(max_length=256)
@@ -34,11 +34,6 @@ class File(models.Model):
 
     class Meta(object):
         unique_together = ('path', 'fileset')
-
-class Allocation(models.Model):
-    allocation_id = models.CharField(max_length=256, unique=True)
-    fileset = models.ForeignKey(Fileset, related_name='allocations')
-
 
 class Process(models.Model):
     allocation_id = models.CharField(max_length=256, unique=True)

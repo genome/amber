@@ -69,11 +69,11 @@ class ProcessResource(ModelResource):
     class Meta(BaseMeta):
         queryset = models.Process.objects.all()
         filtering = {
-                "run_by": ['exact'],
-                "status": ['exact'],
+                "username": ['exact', 'in'],
+                "status": ['exact', 'in'],
                 "date_started": ALL,
-                "date_completed": ALL,
-                "source_path": ['exact'],
+                "date_ended": ALL,
+                "source_path": ['exact', 'in'],
         }
         resource_name = 'processes'
 

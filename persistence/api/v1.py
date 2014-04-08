@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from tastypie.api import Api
 from tastypie.authentication import Authentication
 from tastypie.authorization import Authorization
@@ -58,6 +59,19 @@ class FilesetResource(ModelResource):
         queryset = models.Fileset.objects.all()
         resource_name = 'filesets'
 
+    def obj_create(self, bundle, **kwargs):
+        try:
+            return ModelResource.obj_create(self, bundle, **kwargs)
+        except IntegrityError:
+            # This has the negative side-effect of always making the server
+            # respond with (201) regardless of whether or not the object was
+            # just created.  It would be better if it could return (200) if the
+            # object already existed.
+            allocation_id = simplejson.loads(bundle.request.body)['allocation_id']
+            fileset = models.Fileset.objects.get(allocation_id=allocation_id)
+            bundle.obj = fileset
+            return bundle
+
 class FileResource(ModelResource):
     fileset = fields.ToOneField('persistence.api.v1.FilesetResource', 'fileset')
 
@@ -95,6 +109,24 @@ class ResultResource(ModelResource):
         bundle.data['inputs'] = bundle.obj.inputs
         bundle.data['outputs'] = bundle.obj.outputs
         return bundle
+
+    def obj_create(self, bundle, **kwargs):
+        try:
+            return ModelResource.obj_create(self, bundle, **kwargs)
+        except IntegrityError:
+            # This has the negative side-effect of always making the server
+            # respond with (201) regardless of whether or not the object was
+            # just created.  It would be better if it could return (200) if the
+            # object already existed.
+            data = simplejson.loads(bundle.request.body)
+            tool = models.Tool.objects.get(
+                    source_path=data['tool']['source_path'],
+                    version=data['tool']['version'])
+            result = models.Result.objects.get(tool=tool,
+                    test_name=data['test_name'],
+                    lookup_hash=models.Result.calculate_lookup_hash(data['inputs']))
+            bundle.obj = result
+            return bundle
 
 class ProcessStepResource(ModelResource):
     process = fields.ToOneField(ProcessResource, 'process')

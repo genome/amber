@@ -1,4 +1,5 @@
 from django.db import IntegrityError
+from django.core.urlresolvers import resolve
 from tastypie.api import Api
 from tastypie.authentication import Authentication
 from tastypie.authorization import Authorization
@@ -139,6 +140,28 @@ class ProcessStepResource(ModelResource):
         filtering = {
                 "process": ["exact"],
         }
+
+    def obj_create(self, bundle, **kwargs):
+        try:
+            return ModelResource.obj_create(self, bundle, **kwargs)
+        except IntegrityError:
+            # This has the negative side-effect of always making the server
+            # respond with (201) regardless of whether or not the object was
+            # just created.  It would be better if it could return (200) if the
+            # object already existed.
+            data = simplejson.loads(bundle.request.body)
+            result = models.Result.objects.get(
+                    pk=resolve_primary_key_from_url(data['result']))
+            process = models.Process.objects.get(
+                    pk=resolve_primary_key_from_url(data['process']))
+            process_step = models.ProcessStep.objects.get(process=process,
+                    result=result, label=data['label'])
+            bundle.obj = process_step
+            return bundle
+
+def resolve_primary_key_from_url(url):
+    _, _, kwargs = resolve(url)
+    return kwargs['pk']
 
 
 amber_api = Api(api_name='v1')

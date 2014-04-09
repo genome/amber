@@ -124,7 +124,8 @@ class ResultResource(ModelResource):
                     version=data['tool']['version'])
             result = models.Result.objects.get(tool=tool,
                     test_name=data['test_name'],
-                    lookup_hash=models.Result.calculate_lookup_hash(data['inputs']))
+                    lookup_hash=models.Result.calculate_lookup_hash(
+                        data['inputs']))
             bundle.obj = result
             return bundle
 

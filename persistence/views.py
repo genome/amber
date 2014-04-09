@@ -7,22 +7,6 @@ import simplejson
 
 
 @csrf_exempt
-def register_fileset(request, **stuff):
-    data = simplejson.loads(request.body)
-
-    try:
-        tool = models.Fileset(source_path=data['source_path'],
-                version=data['version'])
-        tool.save()
-    except IntegrityError:
-        tool = models.Tool.objects.get(
-                source_path=data['source_path'],
-                version=data['version'])
-    return HttpResponse(simplejson.dumps({
-        'objects': ['/v1/tools/%d/' % tool.id]
-    }))
-
-@csrf_exempt
 def register_tool(request, **stuff):
     data = simplejson.loads(request.body)
 

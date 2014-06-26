@@ -33,7 +33,7 @@ class Fileset(models.Model):
 class File(models.Model):
     path = models.CharField(max_length=256)
     fileset = models.ForeignKey(Fileset, related_name='files')
-    size = models.IntegerField()
+    size = models.BigIntegerField()
     md5 = models.CharField(max_length=32)
 
     class Meta(object):

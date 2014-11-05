@@ -90,6 +90,7 @@ class ProcessResource(ModelResource):
                 "date_ended": ALL,
                 "source_path": ['exact', 'in'],
         }
+        ordering = ['id']
         resource_name = 'processes'
 
 class ToolResource(ModelResource):
